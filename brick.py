@@ -4,20 +4,30 @@ from config import *
 class Brick:
     def __init__(self, x, y, color='green', strength=1):
         self.rect = pygame.Rect(x, y, BRICK_WIDTH, BRICK_HEIGHT)
-        self.color = color
         self.strength = strength
+        self.base_color = color
+        self.update_color()
+
+    def update_color(self):
+        """Обновление цвета кирпича в зависимости от прочности"""
+        if self.strength == 2:
+            self.color = (255, 165, 0)
+        elif self.strength == 1:
+            self.color = self.base_color
+        else:
+            self.color = BLACK
 
     def draw(self):
-        """Отрисовка кирпича с заданным цветом и прочностью"""
+        """Отрисовка кирпича"""
         pygame.draw.rect(screen, self.color, self.rect)
         pygame.draw.rect(screen, BLACK, self.rect, 2)
 
     def hit(self):
-        """Обработка удара по кирпичу (уменьшение прочности)"""
+        """Обработка удара по кирпичу"""
         self.strength -= 1
-        if self.strength <= 0:
-            return True  # Уничтожить кирпич
-        return False
+        self.update_color()
+        return self.strength <= 0  # Удалить, если прочность 0
+
 
 
 # Функции для создания уровней с различными кирпичами

@@ -1,6 +1,7 @@
-from main import *
+from config import *
 import sys
 import sqlite3
+import pygame
 
 conn = sqlite3.connect("game_scores.db")
 cursor = conn.cursor()

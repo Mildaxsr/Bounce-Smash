@@ -1,6 +1,6 @@
 from config import *
-import random, pygame
-
+import random
+import pygame
 
 
 class Ball:
@@ -10,10 +10,14 @@ class Ball:
         self.y = HEIGHT // 2
         self.dx = random.choice([-1, 1]) * BALL_SPEED
         self.dy = -BALL_SPEED
+        self.rect = pygame.Rect(self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2)
 
     def move(self):
+        """Движение мяча"""
         self.x += self.dx
         self.y += self.dy
+        self.rect.x = self.x - self.radius
+        self.rect.y = self.y - self.radius
 
         # Отражение от стен
         if self.x - self.radius <= 0 or self.x + self.radius >= WIDTH:
@@ -22,17 +26,20 @@ class Ball:
             self.dy *= -1
 
     def draw(self):
+        """Отрисовка мяча"""
         pygame.draw.circle(screen, RED, (int(self.x), int(self.y)), self.radius)
 
     def check_collision_with_paddle(self, paddle):
-        if paddle.rect.collidepoint(self.x, self.y + self.radius):
+        """Проверка столкновения с платформой"""
+        if paddle.rect.colliderect(self.rect):
             self.dy *= -1
 
     def check_collision_with_bricks(self, bricks):
-        for brick in bricks:
-            if brick.rect.collidepoint(self.x, self.y - self.radius) or \
-                    brick.rect.collidepoint(self.x, self.y + self.radius):
+        """Проверка столкновения с кирпичами"""
+        for brick in bricks[:]:
+            if self.rect.colliderect(brick.rect):
+                if brick.hit():
+                    bricks.remove(brick)
                 self.dy *= -1
-                bricks.remove(brick)
                 return True
         return False
