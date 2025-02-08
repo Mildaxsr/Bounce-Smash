@@ -2,13 +2,16 @@ from config import *
 import sys
 
 
+def win_screen():
+    running = True
+    font = pygame.font.SysFont("Colibri", 48)
+    pygame.mixer.init()
+
+
 def game_over_screen():
     running = True
     font = pygame.font.SysFont("Colibri", 48)
     pygame.mixer.init()
-    sound = pygame.mixer.Sound("assets/sound_lose.mp3")
-
-    sound.play()
 
     while running:
         screen.blit(background, (0, 0))
